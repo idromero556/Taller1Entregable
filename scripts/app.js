@@ -10,14 +10,12 @@
     container: document.querySelector(".main"),
     addDialog: document.querySelector(".dialog-container")
   };
-
-  
   /*****************************************************************************
    *
    * Event listeners for UI elements
    *
    ****************************************************************************/
-
+ var db = new PouchDB("dbnamedaya");
   document.getElementById("butRefresh").addEventListener("click", function() {
     // Refresh all of the metro stations
     app.updateSchedules();
@@ -120,21 +118,19 @@
           result.created = response._metadata.date;
           result.schedules = response.result.schedules;
           app.updateTimetableCard(result);
-          
+
           var todo = {
             _id: result.key,
-            label: result.label,
-            created: result.created,
-            schedules: result.schedules
+            key: result.key,
+            label: result.label
+            /*created: result.created,
+            schedules: result.schedules*/
           };
-
           db.put(todo, function callback(err, result) {
             if (!err) {
               console.log("Successfully posted a station!");
             }
           });
-
-          
         }
       } else {
         // Return the initial weather forecast since no data is available.
@@ -159,8 +155,6 @@
    * discussion.
    */
 
-  var initialKey="metros/1/bastille/A";
-  var initialLabel="Bastille, Direction La Défense"
   var initialStationTimetable = {
     key: "metros/1/bastille/A",
     label: "Bastille, Direction La Défense",
@@ -177,6 +171,63 @@
       }
     ]
   };
+
+  app.init = async function() {
+    console.log("entroo");
+    var lista = [];
+
+    try {
+      var result = await db.allDocs({
+        include_docs: true,
+        attachments: true
+      });
+    } catch (err) {
+      console.log(err);
+    }
+
+    //console.log(result.rows);
+    for (var i in result.rows) {
+      lista[i] = result.rows[i];
+    }
+
+    //lista.push(result.rows);
+    console.log(lista);
+    console.log(lista[0].doc.label);
+
+    //alert(Object.keys(lista).length);
+    if (lista.length > 0) {
+      lista.forEach(function(item) {
+        console.log(item.label);
+        app.getSchedule(item.key, item.doc.label);
+        app.selectedTimetables.push({ key: item.key, label: item.label });
+      });
+    } else {
+      app.selectedTimetables = [
+        {
+          key: initialStationTimetable.key,
+          label: initialStationTimetable.label
+        }
+      ];
+    }
+  };
+
+  PouchDB.on('created', function (dbName) {
+  // called whenever a db is created.
+    app.init();
+    app.getSchedule("metros/1/bastille/A", "Bastille, Direction La Défense");
+});
+
+  /* db.info()
+    .then(() => {
+    console.log('fsdf');
+    //app.init;
+    app.getSchedule("metros/1/bastille/A", "Bastille, Direction La Défense");
+    
+      // The database exists.     // Do something...
+    })
+    .catch(e => {
+      // No database found and it was not created.     // Do something else...
+    });*/
 
   /************************************************************************
    *

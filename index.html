@@ -20,13 +20,18 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <link
-      rel="canonical"
-      href="https://weather-pwa-sample.firebaseapp.com/final/"
+       rel="canonical" href="https://example.com"
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Paris Métro 1</title>
     <link rel="stylesheet" type="text/css" href="styles/inline.css" />
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="PWA Paris" />
+    <link rel="apple-touch-icon" href="/images/icons/icon-152x152.png" />
+    <meta name="description" content="Un simple aplicación parisina">
+    <meta name="theme-color" content="#2F3BA2" />
   </head>
   <body>
     <header class="header">
@@ -138,8 +143,6 @@
       }
     </script>
     <script src="/pouchdb.min.js"></script>
-    <script>
-      var db = new PouchDB("dbnamedaya");
-    </script>
+    <script src="/scripts/app.js"></script>
   </body>
 </html>

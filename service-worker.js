@@ -13,3 +13,10 @@ workbox.precaching.precacheAndRoute([
   { url: "/scripts/app.js", revision: null }
 ]);
 
+workbox.routing.registerRoute(
+  new RegExp('/styles/.*\\.css'),
+  new workbox.strategies.NetworkFirst({
+    cacheName: `runtimeCache`,
+    networkTimeoutSeconds: 2
+  })
+);
