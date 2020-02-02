@@ -15,7 +15,7 @@
    * Event listeners for UI elements
    *
    ****************************************************************************/
- var db = new PouchDB("dbnamedaya");
+  var db = new PouchDB("dbnamedaya");
   document.getElementById("butRefresh").addEventListener("click", function() {
     // Refresh all of the metro stations
     app.updateSchedules();
@@ -173,7 +173,6 @@
   };
 
   app.init = async function() {
-    console.log("entroo");
     var lista = [];
 
     try {
@@ -197,9 +196,8 @@
     //alert(Object.keys(lista).length);
     if (lista.length > 0) {
       lista.forEach(function(item) {
-        console.log(item.label);
         app.getSchedule(item.key, item.doc.label);
-        app.selectedTimetables.push({ key: item.key, label: item.label });
+        app.selectedTimetables.push({ key: item.key, label: item.doc.label });
       });
     } else {
       app.selectedTimetables = [
@@ -211,23 +209,11 @@
     }
   };
 
-  PouchDB.on('created', function (dbName) {
-  // called whenever a db is created.
+  PouchDB.on("created", function(dbName) {
+    // called whenever a db is created.
     app.init();
     app.getSchedule("metros/1/bastille/A", "Bastille, Direction La Défense");
-});
-
-  /* db.info()
-    .then(() => {
-    console.log('fsdf');
-    //app.init;
-    app.getSchedule("metros/1/bastille/A", "Bastille, Direction La Défense");
-    
-      // The database exists.     // Do something...
-    })
-    .catch(e => {
-      // No database found and it was not created.     // Do something else...
-    });*/
+  });
 
   /************************************************************************
    *
@@ -244,4 +230,7 @@
   app.selectedTimetables = [
     { key: initialStationTimetable.key, label: initialStationTimetable.label }
   ];
+  
+  
+  
 })();
